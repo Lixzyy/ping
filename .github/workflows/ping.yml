@@ -1,0 +1,22 @@
+name: Ping Monitor
+
+on:
+  schedule:
+    - cron: '*/5 * * * *'
+  workflow_dispatch:
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping le site
+        run: |
+          echo "⏰ $(date '+%Y-%m-%d %H:%M:%S') — Ping en cours..."
+          STATUS=$(curl -o /dev/null -s -w "%{http_code}" --max-time 30 "${{ secrets.PING_URL }}")
+          echo "📡 Réponse HTTP : $STATUS"
+          if [ "$STATUS" -ge 200 ] && [ "$STATUS" -lt 400 ]; then
+            echo "✅ Succès !"
+          else
+            echo "❌ Erreur — code $STATUS"
+            exit 1
+          fi
