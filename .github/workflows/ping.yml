@@ -2,7 +2,7 @@ name: Ping Monitor
 
 on:
   schedule:
-    - cron: '*/5 * * * *'
+    - cron: '*/3 * * * *'
   workflow_dispatch:
 
 jobs:
@@ -11,8 +11,9 @@ jobs:
     steps:
       - name: Ping le site
         run: |
+          URL="https://ksl-u9ad.onrender.com"
           echo "⏰ $(date '+%Y-%m-%d %H:%M:%S') — Ping en cours..."
-          STATUS=$(curl -o /dev/null -s -w "%{http_code}" --max-time 30 "${{ secrets.PING_URL }}")
+          STATUS=$(curl -o /dev/null -s -w "%{http_code}" --max-time 30 "$URL")
           echo "📡 Réponse HTTP : $STATUS"
           if [ "$STATUS" -ge 200 ] && [ "$STATUS" -lt 400 ]; then
             echo "✅ Succès !"
